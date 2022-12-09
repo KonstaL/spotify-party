@@ -91,7 +91,10 @@ const Home: NextPage = () => {
 
             <Divider text="or" />
             <div className="flex">
-              <button className="my-4 flex flex-grow justify-center rounded-2xl bg-green-600 p-4 uppercase text-green-300 hover:bg-green-500">
+              <button
+                className="my-4 flex flex-grow justify-center rounded-2xl bg-green-600 p-4 uppercase text-green-300 hover:bg-green-500"
+                onClick={() => signIn()}
+              >
                 Create a room
               </button>
             </div>
