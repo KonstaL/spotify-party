@@ -1,6 +1,7 @@
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDebounce } from "../../hooks/debounce";
 
 const Header = () => {
@@ -97,15 +98,32 @@ const exampleSearchResults: SearchResult[] = [
 ];
 
 function Search() {
+  const session = useSession();
   const [searchResults, setSearchResults] = useState([...exampleSearchResults]);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  useDebounce(() => {
-    fetch("https://api.spotify.com/v1/search?q=20&type=track")
-      .then((res) => res.json())
-      .then((data) => {
-        setSearchResults(data.tracks.items as SearchResult[]);
-      });
-  }, 1000);
+  console.log("session data", session);
+
+  const debouncedvalue = useDebounce(searchTerm, 500);
+
+  useEffect(() => {
+    if (debouncedvalue) {
+      console.log("searching", debouncedvalue);
+      fetch(
+        `https://api.spotify.com/v1/search?q=${debouncedvalue}&type=track`,
+        {
+          headers: {
+            Authorization: `Bearer ${session.data?.accessToken ?? ""}`,
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("what is this data", data);
+          setSearchResults(data.tracks.items as SearchResult[]);
+        });
+    }
+  }, [debouncedvalue]);
 
   return (
     <>
@@ -117,6 +135,7 @@ function Search() {
         <div className="w-full bg-gray-200 shadow-md">
           <input
             placeholder="Search for a song"
+            onChange={(e) => setSearchTerm(e.target.value)}
             className="rounded-2xl p-4 px-5 placeholder-gray-500  opacity-70
           bg-blend-darken
           transition

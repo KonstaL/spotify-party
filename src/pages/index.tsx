@@ -93,7 +93,7 @@ const Home: NextPage = () => {
             <div className="flex">
               <button
                 className="my-4 flex flex-grow justify-center rounded-2xl bg-green-600 p-4 uppercase text-green-300 hover:bg-green-500"
-                onClick={() => signIn()}
+                onClick={() => signIn("spotify", { callbackUrl: "/room" })}
               >
                 Create a room
               </button>

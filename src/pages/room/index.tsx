@@ -1,3 +1,4 @@
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 
 const Header = () => {
@@ -12,7 +13,19 @@ const Hero = () => {
   );
 };
 
+const currentSongs = [
+  {
+    name: "song1",
+    artist: "artist1",
+    album: "album1",
+    image: "image1",
+    uri: "uri1",
+  },
+];
+
 function Dashboard() {
+  const session = useSession({ required: true });
+  console.log("session", session);
   return (
     <>
       <Head>
@@ -21,7 +34,7 @@ function Dashboard() {
 
       <div>
         <h1 className="text-4xl font-bold text-gray-900">
-          {"konkarit's room"}
+          {`${session.data?.user?.name || "default"}'s room`}
         </h1>
       </div>
     </>
